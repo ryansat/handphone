@@ -193,6 +193,12 @@ public class FormPenjualan extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Jumlah Barang :");
 
+        tNoNota.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tNoNotaActionPerformed(evt);
+            }
+        });
+
         cbKodeBarang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 cbKodeBarangMouseEntered(evt);
@@ -604,6 +610,10 @@ public class FormPenjualan extends javax.swing.JFrame {
             Logger.getLogger(FormPenjualan.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_NamaBrgMouseEntered
+
+    private void tNoNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tNoNotaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tNoNotaActionPerformed
 
     /**
      * @param args the command line arguments
