@@ -29,7 +29,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author HP
  */
-public class FormPenjualan extends javax.swing.JFrame {
+public final class FormPenjualan extends javax.swing.JFrame {
 
     /**
      * Creates new form FormPenjualan
@@ -61,7 +61,7 @@ public class FormPenjualan extends javax.swing.JFrame {
         grid.setModel(model);
 
         this.disp.setText(nf.format(0));
-
+        //tTanggal.setText(new SimpleDateFormat("dd-MMM-yyyy").format(Calendar.getInstance().getTime()));
         new Thread() {
             @Override
             public void run() {
@@ -94,7 +94,7 @@ public class FormPenjualan extends javax.swing.JFrame {
 
             psNextNo = conn.prepareStatement("SELECT IFNULL(MAX(RIGHT(NOTA,4)),0)+1 FROM PENJUALAN WHERE TANGGAL>?");
             psSelectID = this.conn.prepareStatement("SELECT KODE FROM BARANG");
-            
+            psSelectMAXNOTA = this.conn.prepareStatement("SELECT KODE FROM BARANG");
             psUpdateStok = conn.prepareStatement("UPDATE SET STOK =? WHERE KODE=?");
             psHitungStok = conn.prepareStatement("SELECT ((SELECT IFNULL(SUM(JUMLAH),0) FROM DET_PEMBELIAN WHERE BARANG=?) "
                     + "-(SELECT IFNULL(SUM(JUMLAH),0)  FROM DET_PENJUALAN WHERE BARANG=?))AS STOK");
@@ -168,7 +168,7 @@ public class FormPenjualan extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -213,10 +213,6 @@ public class FormPenjualan extends javax.swing.JFrame {
             }
         });
 
-        cbIdpelanggan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        cbIdpenjual.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Tanggal :");
 
@@ -234,6 +230,11 @@ public class FormPenjualan extends javax.swing.JFrame {
         bSimpan.setBackground(new java.awt.Color(204, 204, 204));
         bSimpan.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
         bSimpan.setText("SIMPAN");
+        bSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSimpanActionPerformed(evt);
+            }
+        });
 
         bEdit.setBackground(new java.awt.Color(204, 204, 204));
         bEdit.setFont(new java.awt.Font("Book Antiqua", 1, 12)); // NOI18N
@@ -256,7 +257,7 @@ public class FormPenjualan extends javax.swing.JFrame {
                 .addComponent(bSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(49, 49, 49)
                 .addComponent(bEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addComponent(bProses, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
                 .addComponent(bHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -306,7 +307,7 @@ public class FormPenjualan extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 293, Short.MAX_VALUE)
+                        .addGap(0, 296, Short.MAX_VALUE)
                         .addComponent(jLabel10)
                         .addGap(293, 293, 293))
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -405,7 +406,7 @@ public class FormPenjualan extends javax.swing.JFrame {
                             .addComponent(NamaBrg))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
@@ -615,6 +616,10 @@ public class FormPenjualan extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tNoNotaActionPerformed
 
+    private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bSimpanActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -708,7 +713,7 @@ tTanggal.setText(year+"-"+(month+1)+"-"+date);
     
         private void isiForm() throws SQLException {
          //psSelectID.setString(1, "");
-            
+             int baris = 0;
                 ResultSet rs = psSelectID.executeQuery(); 
                 //System.out.println(psSelectID);
             while(rs.next()) {
@@ -719,9 +724,61 @@ tTanggal.setText(year+"-"+(month+1)+"-"+date);
                 // System.out.println(rs.getString(1));
             }
             // rs.close();
-        
+            int baris1;
+            ResultSet rs1 = psSelectID.executeQuery();
+            rs1.last();
+            baris1 = baris;
+            rs1.beforeFirst();
+            baris1 = baris1+1;
+            tNoNota.setText(""+baris1);
+            getIDPelanggan();
+            getIDPegawai();
+            
       
     }
+        
+        void getIDPelanggan()
+        {
+             try {
+            //cbKodeBarang.removeAllItems();
+            //isiForm();
+            psSelectNAME = this.conn.prepareStatement("SELECT KODE FROM pelanggan");
+            ResultSet rs = psSelectNAME.executeQuery();
+            System.out.println(psSelectNAME);
+            while(rs.next()) {
+                //cbKodeBarang.setSelectedItem(rs.getString(1));
+                 cbIdpelanggan.addItem(rs.getString(1));
+                //cbNamaBarang.addItem(rs.getString(2));
+                //tNoNota.setText(rs.getString(1));
+                // System.out.println(rs.getString(1));
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(FormPenjualan.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+        
+        
+         void getIDPegawai()
+        {
+             try {
+            //cbKodeBarang.removeAllItems();
+            //isiForm();
+            psSelectNAME = this.conn.prepareStatement("SELECT KODE FROM admin");
+            ResultSet rs = psSelectNAME.executeQuery();
+            System.out.println(psSelectNAME);
+            while(rs.next()) {
+                //cbKodeBarang.setSelectedItem(rs.getString(1));
+                 cbIdpenjual.addItem(rs.getString(1));
+                //cbNamaBarang.addItem(rs.getString(2));
+                //tNoNota.setText(rs.getString(1));
+                // System.out.println(rs.getString(1));
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(FormPenjualan.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField NamaBrg;
@@ -775,7 +832,7 @@ tTanggal.setText(year+"-"+(month+1)+"-"+date);
     private PreparedStatement psSelectNAME;
     private PreparedStatement psUpdateStok;
     private PreparedStatement psHitungStok;
-
+    private PreparedStatement psSelectMAXNOTA;
     private PreparedStatement psNextNo;
 
     private final DateFormat dfTgl;
